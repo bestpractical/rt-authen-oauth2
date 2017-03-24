@@ -168,22 +168,23 @@ sub LogUserIn {
     # Get the correct handler for the user's metadata, based on which IDP is in use
     my $idp_handler = $idp_conf->{MetadataHandler};
     my $metadata = $idp_handler->Metadata($response->decoded_content);
-    my $email = $metadata->{ $idp_conf->{MetadataMap}->{EmailAddress} };
+    my $loadcol = $idp_conf->{LoadColumn} || 'EmailAddress';
+    my $name = $metadata->{ $idp_conf->{MetadataMap}->{$loadcol} };
 
     # email is used to identify the user; bail out if we don't have one
-    RT::Logger->info("OAuth2 server return content didn't include email, aborting. Request from $ip") unless $email;
-    return (0, $generic_error) unless $email;
+    RT::Logger->info("OAuth2 server return content didn't include $loadcol, aborting. Request from $ip") unless $name;
+    return (0, $generic_error) unless $name;
 
     my $user = RT::User->new( RT->SystemUser );
-    $user->LoadByEmail($email);
+    $user->LoadByCol($loadcol, $name);
 
     # TODO future feature: auto-vivify a user based on config option, if email matches regex
     # TODO e.g., allow all people from mycompany.com to access RT automatically
 
-    RT::Logger->info("OAuth2 user $email attempted login but no matching user found in RT. Request from $ip") unless $user->id;
+    RT::Logger->info("OAuth2 user $name attempted login but no matching user found in RT. Request from $ip") unless $user->id;
     return(0, $generic_error) unless $user->id;
 
-    RT::Logger->info("OAuth2 user $email is disabled in RT; aborting OAuth2 login. Request from $ip") if $user->PrincipalObj->Disabled;
+    RT::Logger->info("OAuth2 user $name is disabled in RT; aborting OAuth2 login. Request from $ip") if $user->PrincipalObj->Disabled;
     return(0, $generic_error) if $user->PrincipalObj->Disabled;
 
     # Populate any empty fields in the RT user profile from the OAuth server metadata
@@ -198,7 +199,7 @@ sub LogUserIn {
     );
 
     # Set up our session and return to the handler template element for the redirect
-    RT::Logger->info("Successful OAuth2 login for $email from $ip");
+    RT::Logger->info("Successful OAuth2 login for $name from $ip");
     RT::Interface::Web::InstantiateNewSession();
     $session->{CurrentUser} = RT::CurrentUser->new($user);
     return (1, "ok", $args->{state});
