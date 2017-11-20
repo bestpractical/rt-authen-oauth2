@@ -140,7 +140,6 @@ sub LogUserIn {
     # generic_error is displayed to the user to avoid leaking information
     # about the existance and status of user accounts in RT
     my $generic_error = RT->SystemUser->loc("Cannot login. Please contact your administrator.");
-    RT::Logger->debug("XXX generic $generic_error");
     my $ip = $ENV{REMOTE_ADDR};
 
     RT::Logger->info("OAuth2 user already logged in, aborting; new request from $ip") if $session->{CurrentUser} and $session->{CurrentUser}->Id;
