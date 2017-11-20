@@ -18,6 +18,35 @@ Set this to enable the OAuth2 button on the login page.
 
 Set($EnableOAuth2, 1);
 
+=over 4
+
+=item C<$OAuthCreateNewUser>
+
+Set this to enable auto-creating new users based on the OAuth2 data.
+
+    Set($OAuthCreateNewUser, 1);
+
+=back
+
+=cut
+
+Set($OAuthCreateNewUser, 0);
+
+
+=over 4
+
+=item C<$OAuthNewUserOptions>
+
+Set this to enable auto-creating new users based on the OAuth2 data.
+
+    Set($OAuthNewUserOptions, {
+            Privileged => 1,
+        },
+    );
+
+=back
+
+=cut
 
 =over 4
 
