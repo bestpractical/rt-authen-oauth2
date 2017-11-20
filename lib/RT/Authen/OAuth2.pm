@@ -173,6 +173,12 @@ sub LogUserIn {
     RT::Logger->info("OAuth2 server return content didn't include email, aborting. Request from $ip") unless $email;
     return (0, $generic_error) unless $email;
 
+    # TODO: make requiring a verified email an option.
+    unless ($metadata->{ $idp_conf->{MetadataMap}->{VerifiedEmail} }) {
+      RT::Logger->info("Email $email not verified.") unless $email;
+      return (0, RT->SystemUser->loc("Email [_1] not verified.", $email));
+    }
+
     my $user = RT::User->new( RT->SystemUser );
     $user->LoadByEmail($email);
 
@@ -181,12 +187,6 @@ sub LogUserIn {
 
     RT::Logger->info("OAuth2 user $email attempted login but no matching user found in RT. Request from $ip") unless $user->id;
     if (RT->Config->Get('OAuthCreateNewUser') and not $user->id) {
-      # TODO: make requiring a verified email an option.
-      unless ($metadata->{ $idp_conf->{MetadataMap}->{VerifiedEmail} }) {
-        RT::Logger->info("Email $email not verified.  Not creating account.") unless $email;
-        return (0, RT->SystemUser->loc("Email [_1] not verified.  Can't create RT account.", $email));
-      }
-
       my $additional = RT->Config->Get('OAuthNewUserOptions') || { Privileged => 1 };
       my $newuser = RT::User->new( $RT::SystemUser );
       my $name = $metadata->{ $idp_conf->{MetadataMap}->{RealName} };
