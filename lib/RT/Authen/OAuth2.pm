@@ -174,13 +174,35 @@ sub LogUserIn {
     RT::Logger->info("OAuth2 server return content didn't include $loadcol, aborting. Request from $ip") unless $name;
     return (0, $generic_error) unless $name;
 
+    if ( $idp_conf->{MetadataMap}->{VerifiedEmail} && !$metadata->{ $idp_conf->{MetadataMap}->{VerifiedEmail} } ) {
+      RT::Logger->info( "Email $name not verified." );
+      return ( 0, RT->SystemUser->loc( "Email [_1] not verified.", $name ) );
+    }
+
     my $user = RT::User->new( RT->SystemUser );
     $user->LoadByCol($loadcol, $name);
 
-    # TODO future feature: auto-vivify a user based on config option, if email matches regex
+    # TODO future feature: add an option to auto-vivify only if email matches regex
     # TODO e.g., allow all people from mycompany.com to access RT automatically
 
     RT::Logger->info("OAuth2 user $name attempted login but no matching user found in RT. Request from $ip") unless $user->id;
+    if (RT->Config->Get('OAuthCreateNewUser') and not $user->id) {
+      my $additional = RT->Config->Get('OAuthNewUserOptions') || { Privileged => 1 };
+      my $newuser = RT::User->new( $RT::SystemUser );
+      RT::Logger->info("Attempting to create account for $name");
+      my ( $id, $msg ) = $newuser->Create(
+        %$additional,
+        Name => $name,
+        map { $_ => $metadata->{ $idp_conf->{MetadataMap}->{$_} } }
+          grep { $metadata->{ $idp_conf->{MetadataMap}->{$_} } }
+          qw(RealName NickName Organization Lang EmailAddress),
+      );
+      unless ($id) {
+        RT::Logger->info("Error $msg creating account for $name");
+        return (0, $generic_error);
+      }
+      $user = $newuser;
+    }
     return(0, $generic_error) unless $user->id;
 
     RT::Logger->info("OAuth2 user $name is disabled in RT; aborting OAuth2 login. Request from $ip") if $user->PrincipalObj->Disabled;
