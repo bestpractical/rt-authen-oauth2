@@ -9,6 +9,8 @@ use Net::OAuth2::Profile::WebServer;
 use RT::Authen::OAuth2::Unimplemented;
 use RT::Authen::OAuth2::Google;
 
+use URI::Escape;
+
 =head1 NAME
 
 RT-Authen-OAuth2 - External authentication for OAuth 2 sources, like Google, Twitter, GitHub, etc.
@@ -242,6 +244,31 @@ sub IDPLoginButtonImage {
     my $self = shift;
     my $idp = RT->Config->Get('OAuthIDP');
     return RT->Config->Get('OAuthIDPs')->{$idp}->{LoginPageButton};
+}
+
+=item C<LogOutURL()>
+
+=over 4
+
+Returns the appropriate logout URL active OAuth 2 server.
+
+=back
+
+=cut
+
+sub LogoutURL {
+    my $next = shift;
+    my $idp = RT->Config->Get('OAuthIDP');
+    my $idp_config = RT->Config->Get('OAuthIDPs')->{$idp};
+
+    unless (exists $idp_config->{logout_path}) {
+      return $next;
+    }
+
+    my $url = $idp_config->{site} . $idp_config->{logout_path};
+    $next = uri_escape($next);
+    $url =~ s/__NEXT__/$next/;
+    return $url;
 }
 
 1;
