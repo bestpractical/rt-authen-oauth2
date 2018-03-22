@@ -9,6 +9,8 @@ use Net::OAuth2::Profile::WebServer;
 use RT::Authen::OAuth2::Unimplemented;
 use RT::Authen::OAuth2::Google;
 
+use URI::Escape;
+
 =head1 NAME
 
 RT-Authen-OAuth2 - External authentication for OAuth 2 sources, like Google, Twitter, GitHub, etc.
@@ -173,13 +175,38 @@ sub LogUserIn {
     RT::Logger->info("OAuth2 server return content didn't include email, aborting. Request from $ip") unless $email;
     return (0, $generic_error) unless $email;
 
+    # TODO: make requiring a verified email an option.
+    unless ($metadata->{ $idp_conf->{MetadataMap}->{VerifiedEmail} }) {
+      RT::Logger->info("Email $email not verified.") unless $email;
+      return (0, RT->SystemUser->loc("Email [_1] not verified.", $email));
+    }
+
     my $user = RT::User->new( RT->SystemUser );
     $user->LoadByEmail($email);
 
-    # TODO future feature: auto-vivify a user based on config option, if email matches regex
+    # TODO future feature: add an option to auto-vivify only if email matches regex
     # TODO e.g., allow all people from mycompany.com to access RT automatically
 
     RT::Logger->info("OAuth2 user $email attempted login but no matching user found in RT. Request from $ip") unless $user->id;
+    if (RT->Config->Get('OAuthCreateNewUser') and not $user->id) {
+      my $additional = RT->Config->Get('OAuthNewUserOptions') || { Privileged => 1 };
+      my $newuser = RT::User->new( $RT::SystemUser );
+      my $name = $metadata->{ $idp_conf->{MetadataMap}->{RealName} };
+      RT::Logger->info("Attempting to create account for $name <$email>");
+      # TODO: Allow using 'nickname' as account name.  Requires
+      # testing for existence and fallback to email.
+      my ($id, $msg) = $newuser->Create(
+        %$additional,
+        Name         => $email,
+        RealName     => $name,
+        EmailAddress => $email,
+      );
+      unless ($id) {
+        RT::Logger->info("Error $msg creating account for $name <$email>");
+        return (0, $generic_error);
+      }
+      $user = $newuser;
+    }
     return(0, $generic_error) unless $user->id;
 
     RT::Logger->info("OAuth2 user $email is disabled in RT; aborting OAuth2 login. Request from $ip") if $user->PrincipalObj->Disabled;
@@ -219,6 +246,31 @@ sub IDPLoginButtonImage {
     my $self = shift;
     my $idp = RT->Config->Get('OAuthIDP');
     return RT->Config->Get('OAuthIDPs')->{$idp}->{LoginPageButton};
+}
+
+=item C<LogOutURL()>
+
+=over 4
+
+Returns the appropriate logout URL active OAuth 2 server.
+
+=back
+
+=cut
+
+sub LogoutURL {
+    my $next = shift;
+    my $idp = RT->Config->Get('OAuthIDP');
+    my $idp_config = RT->Config->Get('OAuthIDPs')->{$idp};
+
+    unless (exists $idp_config->{logout_path}) {
+      return $next;
+    }
+
+    my $url = $idp_config->{site} . $idp_config->{logout_path};
+    $next = uri_escape($next);
+    $url =~ s/__NEXT__/$next/;
+    return $url;
 }
 
 1;
