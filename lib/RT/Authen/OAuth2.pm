@@ -86,7 +86,7 @@ This is free software, licensed under:
 =cut
 
 
-=item C<RequestAuthorization()>
+=head2 C<RequestAuthorization()>
 
 =over 4
 
@@ -123,7 +123,7 @@ sub RequestAuthorization {
 }
 
 
-=item C<LogUserIn()>
+=head2 C<LogUserIn()>
 
 =over 4
 
@@ -229,7 +229,7 @@ sub LogUserIn {
 }
 
 
-=item C<IDPLoginButtonImage()>
+=head2 C<IDPLoginButtonImage()>
 
 =over 4
 
@@ -246,7 +246,7 @@ sub IDPLoginButtonImage {
     return RT->Config->Get('OAuthIDPs')->{$idp}->{LoginPageButton};
 }
 
-=item C<LogOutURL()>
+=head2 C<LogOutURL()>
 
 =over 4
 

@@ -13,7 +13,7 @@ RT::Authen::OAuth2::Google - Handler for Google OAuth2 logins
 
 =cut
 
-=item Example Metadata
+=head2 Example Metadata
 
 =over 4
 
@@ -34,7 +34,7 @@ Google returns something like this:
 =cut
 
 
-=item Configuring Google
+=head2 Configuring Google
 
 =over 4
 
@@ -61,7 +61,7 @@ B<Save> twice. The Google user interface is a bit finicky.
 =cut
 
 
-=item C<Metadata()>
+=head2 C<Metadata()>
 
 =over 4
 
