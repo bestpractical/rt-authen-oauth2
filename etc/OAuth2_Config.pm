@@ -18,6 +18,35 @@ Set this to enable the OAuth2 button on the login page.
 
 Set($EnableOAuth2, 1);
 
+=over 4
+
+=item C<$OAuthCreateNewUser>
+
+Set this to enable auto-creating new users based on the OAuth2 data.
+
+    Set($OAuthCreateNewUser, 1);
+
+=back
+
+=cut
+
+Set($OAuthCreateNewUser, 0);
+
+
+=over 4
+
+=item C<$OAuthNewUserOptions>
+
+Set this to enable auto-creating new users based on the OAuth2 data.
+
+    Set($OAuthNewUserOptions, {
+            Privileged => 1,
+        },
+    );
+
+=back
+
+=cut
 
 =over 4
 
@@ -135,6 +164,29 @@ Set(%OAuthIDPs,
         'protected_resource_url' => 'https://www.googleapis.com/userinfo/v2/me',
         'scope' => 'openid profile email',
         'access_token_path' => '/o/oauth2/token',
+        'client_id' => '',
+        'client_secret' => '',
+        'state' => '',
+    },
+    'auth0' => {
+        # You must Set($Auth0Host, "something.auth0.com");
+        'MetadataHandler' => 'RT::Authen::OAuth2::Google',
+        'MetadataMap' => {
+            EmailAddress => 'email',
+            RealName => 'name',
+            NickName => 'nickname',
+            Lang => 'not-provided',
+            Organization => 'not-provided',
+            VerifiedEmail => 'email_verified',
+        },
+        'LoginPageButton' => '/static/images/btn_auth0_signin.png',
+        'authorize_path' => '/authorize',
+        'site' => 'https://' . RT->Config->Get('Auth0Host'),
+        'logout_path' => '/v2/logout?returnTo=__NEXT__&client_id=' . RT->Config->Get('OAuthIDPSecrets')->{'auth0'}->{'client_id'},
+        'name' => 'Auth0',
+        'protected_resource_path' => '/userinfo',
+        'scope' => 'openid profile email',
+        'access_token_path' => '/oauth/token',
         'client_id' => '',
         'client_secret' => '',
         'state' => '',
