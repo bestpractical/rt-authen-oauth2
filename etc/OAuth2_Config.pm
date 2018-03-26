@@ -105,6 +105,8 @@ found in the C<%OAuthIDPs> internal config option.
 
 =cut
 
+Set( %OAuthIDPSecrets, () );
+
 
 =head1 INTERNAL CONFIGURATION DEFAULTS
 
