@@ -18,15 +18,9 @@ INSTALLATION
         May need root permissions
 
     Edit your /opt/rt4/etc/RT_SiteConfig.pm
-        If you are using RT 4.2 or greater, add this line:
+        Add this line:
 
             Plugin('RT::Authen::OAuth2');
-
-        For RT 4.0, add this line:
-
-            Set(@Plugins, qw(RT::Authen::OAuth2));
-
-        or add RT::Authen::OAuth2 to your existing @Plugins line.
 
     Add / Edit OAuth2 configs found in OAuth2_Config.pm
     Clear your mason cache
@@ -53,32 +47,24 @@ LICENSE AND COPYRIGHT
 
       The GNU General Public License, Version 2, June 1991
 
-    RequestAuthorization()
+METHODS
+  RequestAuthorization()
+        Creates an Authorization Request on behalf of the Resource Owner
+        (user), and initiates the OAuth 2 protocol with the Authorization
+        Server. The browser will redirect to the $OAuthRedirect endpoint
+        specified in the config.
 
-            Creates an Authorization Request on behalf of the Resource Owner
-            (user), and initiates the OAuth 2 protocol with the
-            Authorization Server. The browser will redirect to the
-            $OAuthRedirect endpoint specified in the config.
+  LogUserIn()
+        Called from the $OAuthRedirect endpoint handler element. Validates
+        the user exists and is allowed to log in, auto-populates user
+        metadata returned from the OAuth 2 server, and sets up a session. If
+        successful, returns to the handler template element to redirect to
+        the final destination.
 
-    LogUserIn()
+  IDPLoginButtonImage()
+        Returns the appropriate login button image for the active OAuth 2
+        server. This is displayed on the RT login page.
 
-            Called from the $OAuthRedirect endpoint handler element.
-            Validates the user exists and is allowed to log in,
-            auto-populates user metadata returned from the OAuth 2 server,
-            and sets up a session. If successful, returns to the handler
-            template element to redirect to the final destination.
-
-    IDPLoginButtonImage()
-
-            Returns the appropriate login button image for the active OAuth
-            2 server. This is displayed on the RT login page.
-
-POD ERRORS
-    Hey! The above document had some coding errors, which are explained
-    below:
-
-    Around line 87:
-        '=item' outside of any '=over'
-
-        =over without closing =back
+  LogOutURL()
+        Returns the appropriate logout URL active OAuth 2 server.
 
