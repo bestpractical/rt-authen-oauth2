@@ -41,15 +41,9 @@ May need root permissions
 
 =item Edit your F</opt/rt4/etc/RT_SiteConfig.pm>
 
-If you are using RT 4.2 or greater, add this line:
+Add this line:
 
     Plugin('RT::Authen::OAuth2');
-
-For RT 4.0, add this line:
-
-    Set(@Plugins, qw(RT::Authen::OAuth2));
-
-or add C<RT::Authen::OAuth2> to your existing C<@Plugins> line.
 
 =item Add / Edit OAuth2 configs found in OAuth2_Config.pm
 
