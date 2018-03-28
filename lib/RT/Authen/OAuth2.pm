@@ -79,6 +79,7 @@ This is free software, licensed under:
 
 =cut
 
+=head1 METHODS
 
 =head2 C<RequestAuthorization()>
 
