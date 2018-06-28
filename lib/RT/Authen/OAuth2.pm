@@ -4,6 +4,9 @@ package RT::Authen::OAuth2;
 
 our $VERSION = '0.10';
 
+# Add css files to the @CSSFiles config
+RT->AddStyleSheets('authen-oauth2.css');
+
 use Net::OAuth2::Profile::WebServer;
 
 use RT::Authen::OAuth2::Unimplemented;
