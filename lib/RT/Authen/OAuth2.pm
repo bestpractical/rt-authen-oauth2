@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package RT::Authen::OAuth2;
 
-our $VERSION = '0.10';
+our $VERSION = '0.11';
 
 use Net::OAuth2::Profile::WebServer;
 
