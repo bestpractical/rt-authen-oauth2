@@ -11,6 +11,8 @@ use RT::Authen::OAuth2::Google;
 
 use URI::Escape;
 
+RT->AddStyleSheets('rt-authen-oauth2.css');
+
 =head1 NAME
 
 RT-Authen-OAuth2 - External authentication for OAuth 2 sources, like Google, Twitter, GitHub, etc.
