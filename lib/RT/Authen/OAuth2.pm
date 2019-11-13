@@ -114,7 +114,7 @@ sub RequestAuthorization {
         redirect_uri => RT->Config->Get('OAuthRedirect'),
     );
 
-    my $ip = $ENV{REMOTE_ADDR};
+    my $ip = RT::Interface::Web::RequestENV('REMOTE_ADDR') || 'UNKNOWN';
     RT::Logger->info("OAuth 2 redirect from RequestAuthorization() from $ip");
     RT::Interface::Web::Redirect($auth->authorize);
 }
@@ -139,7 +139,7 @@ sub LogUserIn {
     # generic_error is displayed to the user to avoid leaking information
     # about the existance and status of user accounts in RT
     my $generic_error = RT->SystemUser->loc("Cannot login. Please contact your administrator.");
-    my $ip = $ENV{REMOTE_ADDR};
+    my $ip = RT::Interface::Web::RequestENV('REMOTE_ADDR') || 'UNKNOWN';
 
     RT::Logger->info("OAuth2 user already logged in, aborting; new request from $ip") if $session->{CurrentUser} and $session->{CurrentUser}->Id;
     return (0, $generic_error) if $session->{CurrentUser} and $session->{CurrentUser}->Id;
