@@ -247,5 +247,19 @@ Set(%OAuthIDPs,
         'client_secret' => '',
         'state' => '',
     },
+    'okta' => {
+        'MetadataHandler' => 'RT::Authen::OAuth2::Google',
+        'MetadataMap' => {
+            'EmailAddress' => 'email',
+        },
+        'access_token_path' => '/oauth2/v1/token',
+        'site' => 'https://$YOUR_OKTA.okta.com',
+        'scope' => 'openid profile email',
+        'authorize_path' => '/oauth2/v1/authorize',
+        'authorize_method' => 'GET',
+        'state' => '',
+        'protected_resource_path' => '/oauth2/v1/userinfo',
+        'protected_resource_method' => 'GET',
+    },
 );
 
