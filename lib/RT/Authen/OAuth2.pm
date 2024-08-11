@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package RT::Authen::OAuth2;
 
-our $VERSION = '0.11';
+our $VERSION = '0.12';
 
 use Net::OAuth2::Profile::WebServer;
 
@@ -23,7 +23,7 @@ External authentication for OAuth2 sources.
 
 =head1 RT VERSION
 
-Works with RT 4.4
+Works with RT 4.4 and 5
 
 =head1 DEPENDENCIES
 
@@ -73,7 +73,7 @@ or via the web at
 
 =head1 LICENSE AND COPYRIGHT
 
-This software is Copyright (c) 2016-2019 by Best Practical Solutions LLC
+This software is Copyright (c) 2016-2024 by Best Practical Solutions LLC
 
 This is free software, licensed under:
 
