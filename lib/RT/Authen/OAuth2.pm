@@ -169,6 +169,9 @@ sub LogUserIn {
     my $idp_handler = $idp_conf->{MetadataHandler};
     my $metadata = $idp_handler->Metadata($response->decoded_content);
     RT->Logger->debug( 'OAuth2 metadata: ' . Dumper($metadata) );
+    if ( $metadata->{result} && ref $metadata->{result} eq 'HASH' ) {
+        $metadata->{$_} ||= $metadata->{result}{$_} for keys %{ $metadata->{result} };
+    }
     my $loadcol = $idp_conf->{LoadColumn} || 'EmailAddress';
     my $name = $metadata->{ $idp_conf->{MetadataMap}->{$loadcol} };
 
