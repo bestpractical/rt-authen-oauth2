@@ -8,6 +8,7 @@ use Net::OAuth2::Profile::WebServer;
 
 use RT::Authen::OAuth2::Unimplemented;
 use RT::Authen::OAuth2::Google;
+use Data::Dumper;
 
 use URI::Escape;
 
@@ -159,6 +160,7 @@ sub LogUserIn {
 
     # Call the Authorization Server and get an access token
     my $access_token = $auth->get_access_token($args->{code});
+    RT->Logger->debug( 'OAuth2 access_token: ' . Dumper($access_token) );
 
     # Retrieve the user's profile metadata from the protected resource
     my $response = $access_token->get($idp_conf->{protected_resource_url} || $idp_conf->{protected_resource_path});
@@ -166,6 +168,7 @@ sub LogUserIn {
     # Get the correct handler for the user's metadata, based on which IDP is in use
     my $idp_handler = $idp_conf->{MetadataHandler};
     my $metadata = $idp_handler->Metadata($response->decoded_content);
+    RT->Logger->debug( 'OAuth2 metadata: ' . Dumper($metadata) );
     my $loadcol = $idp_conf->{LoadColumn} || 'EmailAddress';
     my $name = $metadata->{ $idp_conf->{MetadataMap}->{$loadcol} };
 
