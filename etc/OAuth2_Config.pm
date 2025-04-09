@@ -121,7 +121,9 @@ returned.  Typically (always?) this must match what is configured in the IdP,
 and the name and path of the template components that handle the request. You
 should never need to change this.
 
-This should be a full URI (see rfc6819 section 4.1.5)
+This should be a full URI (see rfc6819 section 4.1.5). Note that you may not
+be able to use RT->Config->Get('WebURL') at this point in the configuration
+loading, so you may need to explicitly provide your WebURL.
 
     Set($OAuthRedirect, RT->Config->Get('WebURL') . 'NoAuth/OAuthRedirect');
 
