@@ -88,10 +88,12 @@ with the email returned by the Identity Provider.
 B<REQUIRED>
 
 You must set the B<Client ID> and B<Client Secret> here. These are given
-to you by your Identity Provider. For Google, they are found in the
-developer console where you configure the OAuth login. Each endpoint can
-have its own set of secrets, so you must specify the endpoint name as
-found in the C<%OAuthIDPs> internal config option.
+to you by your Identity Provider.  Each endpoint can have its own set of
+secrets, so you must specify the endpoint name as found in the C<%OAuthIDPs>
+internal config option.
+
+For Google, they are found in the developer console where you configure the
+OAuth login.
 
     Set(%OAuthIDPSecrets,
         'google' => {
@@ -114,10 +116,10 @@ Set( %OAuthIDPSecrets, () );
 
 =item C<$OAuthRedirect>
 
-This parameter is used by Google to define where the results are returned.
-Must match what is configured in the Google Developer console, and the name
-and path of the template components that handle the request. You should never
-need to change this.
+This parameter is used by the IdP provider to define where the results are
+returned.  Typically (always?) this must match what is configured in the IdP,
+and the name and path of the template components that handle the request. You
+should never need to change this.
 
 This should be a full URI (see rfc6819 section 4.1.5)
 
