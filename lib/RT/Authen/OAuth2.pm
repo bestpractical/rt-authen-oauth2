@@ -112,7 +112,8 @@ sub RequestAuthorization {
 
     my $auth = Net::OAuth2::Profile::WebServer->new(
         %$idp_conf,
-        redirect_uri => RT->Config->Get('OAuthRedirect'),
+        redirect_uri => (RT->Config->Get('OAuthRedirect') ||
+                        (RT->Config->Get('WebURL') . 'NoAuth/OAuthRedirect')),
     );
 
     my $ip = RT::Interface::Web::RequestENV('REMOTE_ADDR') || 'UNKNOWN';
@@ -155,7 +156,8 @@ sub LogUserIn {
         %$idp_conf,
         client_id => RT->Config->Get('OAuthIDPSecrets')->{$idp}->{client_id},
         client_secret => RT->Config->Get('OAuthIDPSecrets')->{$idp}->{client_secret},
-        redirect_uri => RT->Config->Get('OAuthRedirect'),
+        redirect_uri => (RT->Config->Get('OAuthRedirect') ||
+                        (RT->Config->Get('WebURL') . 'NoAuth/OAuthRedirect')),
     );
 
     # Call the Authorization Server and get an access token
