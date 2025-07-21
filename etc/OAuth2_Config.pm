@@ -36,7 +36,8 @@ Set($OAuthCreateNewUser, 0);
 
 =item C<$OAuthNewUserOptions>
 
-Set this to enable auto-creating new users based on the OAuth2 data.
+Set additional options when auto-creating new users. Default creates users as Privileged.
+ - Set Privileged => 0 to create Unprivileged users.
 
     Set($OAuthNewUserOptions, {
             Privileged => 1,
