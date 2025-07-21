@@ -65,6 +65,9 @@ METHODS
         Returns the appropriate login button image for the active OAuth 2
         server. This is displayed on the RT login page.
 
+  IDPName()
+        Returns the name configured for the active OAuth 2 provider.
+
   LogOutURL()
         Returns the appropriate logout URL active OAuth 2 server.
 
