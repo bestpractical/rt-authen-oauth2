@@ -32,7 +32,6 @@ Set this to enable auto-creating new users based on the OAuth2 data.
 
 Set($OAuthCreateNewUser, 0);
 
-
 =over 4
 
 =item C<$OAuthNewUserOptions>
@@ -47,6 +46,23 @@ Set this to enable auto-creating new users based on the OAuth2 data.
 =back
 
 =cut
+
+=over 4
+
+=item C<%OAuthNewUserGroups>
+
+Set this to always automatically add new users to RT groups.
+
+    Set(%OAuthNewUserGroups,
+        'google' => [ 'Staff', 'Support' ],
+        'auth0'=> [ 'Users' ],
+        ...
+    );
+
+=back
+
+=cut
+
 
 =over 4
 

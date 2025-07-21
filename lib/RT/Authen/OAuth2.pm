@@ -192,6 +192,21 @@ sub LogUserIn {
 
     RT::Logger->info("OAuth2 user $name attempted login but no matching user found in RT. Request from $ip") unless $user->id;
     if (RT->Config->Get('OAuthCreateNewUser') and not $user->id) {
+
+      my @add_to_groups = @{ (RT->Config->Get('OAuthNewUserGroups') // {})->{$idp} // [] };
+
+      # Check all initial groups exist. Bail before adding user if RT group doesn't exist
+      foreach my $add_group (@add_to_groups) {
+
+        my $group = RT::Group->new( $RT::SystemUser );
+        $group->LoadUserDefinedGroup( $add_group );
+
+            unless ($group->Id) {
+                $RT::Logger->error("Couldn't add ".$user." to ".$add_group." - group does not exist");
+                return(0, $generic_error) unless $user->id;
+            }
+      }
+
       my $additional = RT->Config->Get('OAuthNewUserOptions') || { Privileged => 1 };
       my $newuser = RT::User->new( $RT::SystemUser );
       RT::Logger->info("Attempting to create account for $name");
@@ -206,6 +221,18 @@ sub LogUserIn {
         RT::Logger->info("Error $msg creating account for $name");
         return (0, $generic_error);
       }
+
+      # Add the new user to any initial group(s)
+      foreach my $add_group (@add_to_groups) {
+
+        my $status = _add_user_to_group($newuser, $add_group);
+
+            unless ($status) {
+                RT::Logger->info("Error adding user to group $add_group");
+            }
+
+        }
+
       $user = $newuser;
     }
     return(0, $generic_error) unless $user->id;
@@ -272,6 +299,40 @@ sub LogoutURL {
     $next = uri_escape($next);
     $url =~ s/__NEXT__/$next/;
     return $url;
+}
+
+sub _add_user_to_group {
+
+    my ($user, $group_name) = @_;
+
+    return unless $user;
+    return unless $group_name;
+
+    my $group = RT::Group->new($RT::SystemUser);
+    $group->LoadUserDefinedGroup( $group_name );
+
+    unless ($group->Id) {
+      $RT::Logger->error("Couldn't add ".$user->Name." to ".$group_name." - group does not exist");
+      return;
+    }
+  
+    # my $user = new RT::User($RT::SystemUser);
+    my $principal = $user->PrincipalObj;
+
+    if ($group->HasMember($principal)) {
+        $RT::Logger->debug($user->Name . " already a member of " . $group->Name);
+        return 1;
+    }
+
+    my ($status, $msg) = $group->AddMember($principal->Id);
+
+    if ($status) {
+      $RT::Logger->debug("Added ".$user->Name." to ".$group->Name." [$msg]");
+    } else {
+      $RT::Logger->error("Couldn't add ".$user->Name." to ".$group->Name." [$msg]");
+    }
+    return $status;
+
 }
 
 1;
