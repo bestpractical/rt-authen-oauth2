@@ -1,5 +1,10 @@
 Revision history for RT-Authen-OAuth
 
+0.14-rc1 2025-07-22
+  - Add %OAuthNewUserGroups option to add auto-created users to specified RT groups
+  - Fix broken image link if no LoginPageButton defined (show button instead)
+  - Show name of configured provider
+
 0.13 2025-02-11
  - Support result key in the response of protected_resource
  - Add more debug info
