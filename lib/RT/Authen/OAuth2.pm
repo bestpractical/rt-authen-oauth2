@@ -202,8 +202,8 @@ sub LogUserIn {
         $group->LoadUserDefinedGroup( $add_group );
 
             unless ($group->Id) {
-                $RT::Logger->error("Couldn't add ".$user." to ".$add_group." - group does not exist");
-                return(0, $generic_error) unless $user->id;
+                $RT::Logger->error("Error adding account for ".$name." - Group ".$add_group." does not exist");
+                return(0, $generic_error);
             }
       }
 
@@ -285,6 +285,24 @@ Returns the appropriate logout URL active OAuth 2 server.
 =back
 
 =cut
+
+=head2 C<IDPName()>
+
+=over 4
+
+Returns the name configured for the active OAuth 2 provider.
+
+=back
+
+=cut
+
+
+sub IDPName {
+    my $self = shift;
+    my $idp = RT->Config->Get('OAuthIDP');
+    return RT->Config->Get('OAuthIDPs')->{$idp}->{name} || $idp;
+}
+
 
 sub LogoutURL {
     my $next = shift;
