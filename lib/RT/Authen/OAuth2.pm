@@ -286,24 +286,6 @@ Returns the appropriate logout URL active OAuth 2 server.
 
 =cut
 
-=head2 C<IDPName()>
-
-=over 4
-
-Returns the name configured for the active OAuth 2 provider.
-
-=back
-
-=cut
-
-
-sub IDPName {
-    my $self = shift;
-    my $idp = RT->Config->Get('OAuthIDP');
-    return RT->Config->Get('OAuthIDPs')->{$idp}->{name} || $idp;
-}
-
-
 sub LogoutURL {
     my $next = shift;
     my $idp = RT->Config->Get('OAuthIDP');
