@@ -22,8 +22,28 @@ INSTALLATION
 
             Plugin('RT::Authen::OAuth2');
 
-    Add / Edit OAuth2 configs found in OAuth2_Config.pm
-    Clear your mason cache
+       Add (at least) configuration options:
+
+            Set($OAuthIDP, 'your_idp_name');
+
+            Set(%OAuthIDPSecrets,
+                'your_idp_name' => {
+                    client_id => '.....',
+                    client_secret => '.....',
+                },
+            );
+
+            Set(%OAuthIDPOptions, 
+                ...
+            );
+
+            - Plus any additional options needed for specific IDPs.
+
+         - See OAuth2_Config.pm / perldoc OAuth2_Config.pm for examples and additional options.
+
+           OAuth2_Config.pm includes working examples for google, auth0 and authentik.
+
+    Clear your mason cache:
             rm -rf /opt/rt4/var/mason_data/obj
 
     Restart your webserver

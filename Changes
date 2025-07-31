@@ -1,5 +1,25 @@
 Revision history for RT-Authen-OAuth
 
+0.14-rc2 2025-07-30
+  - Support for group configuration and updates from Identity Provider
+    - Ability to map IDP groups to RT groups (GroupMap)
+    - Enable/Disable login if user has no groups (AllowLoginWithoutGroups)
+    - Enable/Disable new user creation if user has no groups (CreateNoGroupUser)
+    - Set/Override default options per group (GroupUserOptions) and for 'NoGroup'
+    - Option to require user to be in IDP group for login. (RequireGroup)
+    - Option to always update user groups on login (LoginUpdateGroups)
+    - Option to exclude admin users from updates (Admins)
+  - Make fields updated during creation and login configurable (LoginUpdateFields, CreateUpdateFields)
+  - Option to remove RT user password on successful SSO login (RemoveRTPassword)
+  - Disable OAuth2 access token debug logging by default. (Set $OAuthDebugToken = 1 to enable)
+  - Improve consistency of log messages
+  - Add (%OAuthIDPOptions) to allow for default setting for all IDPs, and override settings in %OAuthIDPs without having to copy all of %OAuthIDPs to the site configuration
+  - Incorporate puck's changes (PR #6)
+  - Docs update
+  - Add SECURITY CONSIDERATIONS
+  - Update examples for Authentik and new options
+  - Other small changes
+
 0.14-rc1 2025-07-22
   - Add %OAuthNewUserGroups option to add auto-created users to specified RT groups
   - Fix broken image link if no LoginPageButton defined (show button instead)
