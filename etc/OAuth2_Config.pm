@@ -228,11 +228,14 @@ IDP config options are applied and inherited in the following order:
 
 =over 8
 
-=item 1. C<%OAuthIDPs> in RT database or plugin core config F<plugins/RT-Authen-OAuth2OAuth2_Config.pm>
+=item 1
+C<%OAuthIDPs> in RT database or plugin core config F<plugins/RT-Authen-OAuth2OAuth2_Config.pm>
 
-=item 2. C<%OAuthIDPOptions> 'default' section in plugin core config (or if replaced in F<RT_SiteConfig>).
+=item 2
+C<%OAuthIDPOptions> 'default' section in plugin core config (or if replaced in F<RT_SiteConfig>).
 
-=item 3. C<%OAuthIDPOptions> IDP section in site config, e.g. F<etc/RT_SiteConfig.d/RT-Authen-OAuth2.pm>. Settings will replace any previous defaults.
+=item 3
+C<%OAuthIDPOptions> IDP section in site config, e.g. F<etc/RT_SiteConfig.d/RT-Authen-OAuth2.pm>. Settings will replace any previous defaults.
 
 =back
 
@@ -499,15 +502,18 @@ the following:
 
 =over 8
 
-=item 1. C<GroupMap>
+=item *
+C<GroupMap>
 
 Permits users in any group listed in C<GroupMap>
 
-=item 2. I<Group Name>
+=item * 
+I<Group Name>
 
 Permits users in a specifc group (exact match)
 
-=item 3. C<^>I<Group Prefix>
+=item * 
+C<^>I<Group Prefix>
 
 Permits users in any group name starting with a given prefix. e.g.: C<^RT_> would match any group
 beginning with C<"RT_">.
@@ -590,7 +596,7 @@ be able to set a new password.)
 
 B<NOTE>: This action is irreversible: RT's password hashes are deleted and not retained.
 It is therefore not possible to "reactivate" a previous password (unless you restore
-it from a database backup.) To login again with RT username/password, an admin user will
+it from a database backup.) To login again with RT username/password, an admin user 
 can set a new password for the user.
 
 By default, the 'root' RT user's password is never updated. 
@@ -611,13 +617,17 @@ Default:
 
 =over 8
 
-=item - No IDP group membership are enforced. (Configured in C<RequireGroup>).
+=item * 
+No IDP group membership are enforced. (Configured in C<RequireGroup>).
 
-=item - No groups are updated on login if C<LoginUpdateGroups> is enabled.
+=item *
+No groups are updated on login if C<LoginUpdateGroups> is enabled.
 
-=item - No user attributes are updated on login.
+=item *
+No user attributes are updated on login.
 
-=item - No RT password update if C<RemoveRTPassword> is enabled.
+=item *
+No RT password update if C<RemoveRTPassword> is enabled.
 
 =back
 
