@@ -24,7 +24,7 @@ External authentication for OAuth2 sources.
 
 =head1 RT VERSION
 
-Works with RT 4.4 and 5
+Works with RT 4.4, 5, and 6.0
 
 =head1 DEPENDENCIES
 
@@ -438,6 +438,15 @@ sub LogUserIn {
     RT::Logger->info( "OAuth2: Successful OAuth2 login for $name from $ip (provider $idp) ");
     RT::Interface::Web::InstantiateNewSession();
     $session->{CurrentUser} = RT::CurrentUser->new($user);
+
+    # Write changes back to persistent session (RT >= 6.0.0):
+    if ( $RT::MAJOR_VERSION >= 6 ) {
+        RT::Logger->debug("OAuth2: RT version $RT::VERSION - using new session method");
+        RT::Interface::Web::Session::Set(
+            Key   => 'CurrentUser',
+            Value => $session->{CurrentUser},
+        );
+    }
 
     # After successful SSO login, remove RT password if RemoveRTPassword enabled.
     # This disables password login for the user. Users configured as "Admins" are excluded.
