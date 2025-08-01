@@ -2,7 +2,7 @@ use strict;
 use warnings;
 package RT::Authen::OAuth2;
 
-our $VERSION = '0.14-rc2';
+our $VERSION = '0.14';
 
 use Net::OAuth2::Profile::WebServer;
 
@@ -415,6 +415,15 @@ sub LogUserIn {
     RT::Logger->info( "OAuth2: Successful OAuth2 login for $name from $ip (provider $idp) ");
     RT::Interface::Web::InstantiateNewSession();
     $session->{CurrentUser} = RT::CurrentUser->new($user);
+
+    # Write changes back to persistent session (RT >= 6.0.0):
+    if ($RT::VERSION =~ /^6\./) {
+        RT::Logger->debug( "OAuth2: RT version $RT::VERSION - using new session method");
+        RT::Interface::Web::Session::Set(
+        Key   => 'CurrentUser',
+        Value => $session->{CurrentUser},
+        );
+    };
 
     # After successful SSO login, remove RT password if RemoveRTPassword enabled.
     # This disables password login for the user. Users configured as "Admins" are excluded.
