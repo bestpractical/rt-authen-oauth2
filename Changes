@@ -18,6 +18,7 @@ Revision history for RT-Authen-OAuth
   - Docs update
   - Add SECURITY CONSIDERATIONS
   - Update examples for Authentik and new options
+  - Add example for okta
   - Other small changes
 
 0.14-rc1 2025-07-22
