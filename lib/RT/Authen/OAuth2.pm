@@ -417,7 +417,7 @@ sub LogUserIn {
     $session->{CurrentUser} = RT::CurrentUser->new($user);
 
     # Write changes back to persistent session (RT >= 6.0.0):
-    if ($RT::VERSION =~ /^6\./) {
+    if ($RT::MAJOR_VERSION >= 6) {
         RT::Logger->debug( "OAuth2: RT version $RT::VERSION - using new session method");
         RT::Interface::Web::Session::Set(
         Key   => 'CurrentUser',
