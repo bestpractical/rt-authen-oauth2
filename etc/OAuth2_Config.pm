@@ -377,6 +377,8 @@ and you are sure users cannot change their email address.
 
     'LoadColumn' => 'EmailAddress',
 
+=back
+
 =head1 UNIQUE EMAIL ADDRESS CONSTRAINT
 
 RT requires email addresses to be unique across all users. Some IDPs allow multiple users to have 
