@@ -239,7 +239,7 @@ C<%OAuthIDPOptions> IDP section in site config, e.g. F<etc/RT_SiteConfig.d/RT-Au
 
 =back
 
-If you prefer, you can ignore this feature and simply copy C<C<%OAuthIDPs>> to your F<RT_SiteConfig>
+If you prefer, you can ignore this feature and simply copy C<%OAuthIDPs> to your F<RT_SiteConfig>
 (as before), but you must set (and maintain) B<all> of the replaced config options even if they
 are the same as the supplied defaults.
 
@@ -327,7 +327,19 @@ Set( $OAuthDebugToken, 0 );
 
 =head1 SECURITY CONSIDERATIONS
 
-B<LoadColumn> option
+=over 4
+
+=item C<%OAuthIDPSecrets>
+
+If your RT configuration files are backed up or stored in a repository, or you keep
+multiple repositories for testing or development, take care that your secrets are 
+not accidentally committed to a repository where they are visible to others.
+
+You may want to add C<Set(%OAuthIDPSecrets, ...> to a separate RT_SiteConfig.d file,
+then add this file to your .gitignore, for example.
+
+
+=item B<LoadColumn> option
 
 B<NOTE>: This is a sub-key of C<%OAuthIDPs>. Each IDP has a C<LoadColumn> option.
 
@@ -369,7 +381,7 @@ and you are sure users cannot change their email address.
 
 RT requires email addresses to be unique across all users. Some IDPs allow multiple users to have 
 the same email address. If your usernames are not email addresses, attempting to add a second 
-user with the same email address as any existing RT user (enabled/privilieged or otherwise) will fail.
+user with the same email address as any existing RT user (enabled/privileged or otherwise) will fail.
 
 =head1 GROUP AND USER CONFIGURATION OPTIONS
 
