@@ -1,6 +1,6 @@
 NAME
     RT-Authen-OAuth2 - External authentication for OAuth 2 sources, like
-    Google, X, Authentik, GitHub, etc.
+    Google, X, Authentik, okta, GitHub, etc.
 
 DESCRIPTION
     External authentication for OAuth2 sources.
@@ -41,7 +41,7 @@ INSTALLATION
 
          - See OAuth2_Config.pm / perldoc OAuth2_Config.pm for examples and additional options.
 
-           OAuth2_Config.pm includes working examples for google, auth0 and authentik.
+           OAuth2_Config.pm includes working examples for google, auth0, okta and authentik.
 
     Clear your mason cache:
             rm -rf /opt/rt4/var/mason_data/obj
